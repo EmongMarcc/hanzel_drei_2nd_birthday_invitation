@@ -107,17 +107,16 @@
             z-index: 0;
         }
         
-        /* Hide elements initially for GSAP reveal */
-        .gsap-reveal { visibility: hidden; }
-
-        /* Canvas z-index */
-        #bg-canvas {
+        /* Navigation Style */
+        #main-nav {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -10;
+            right: 0;
+            z-index: 50;
+            background-color: #2f3542; /* Darker control panel look */
+            border-bottom: 5px solid #1e272e;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
     </style>
 </head>
@@ -126,8 +125,25 @@
     <!-- THREE.JS CANVAS LAYER -->
     <canvas id="bg-canvas"></canvas>
 
+    <!-- FIXED NAVIGATION BAR (New Feature) -->
+    <nav id="main-nav">
+        <div class="max-w-md mx-auto flex justify-between items-center h-14 px-4">
+            <div class="text-sm fun-font text-train-yellow">
+                <i class="fas fa-train mr-1"></i> EXPRESS
+            </div>
+            <div class="flex space-x-3 text-white text-xs font-body font-semibold">
+                <a href="#carriage-invite" class="nav-link hover:text-train-red transition">Invite</a>
+                <a href="#carriage-celebration" class="nav-link hover:text-train-yellow transition">Details</a>
+                <a href="#carriage-location" class="nav-link hover:text-train-blue transition">Station</a>
+                <a href="#carriage-rules" class="nav-link hover:text-grass transition">Rules</a>
+            </div>
+        </div>
+    </nav>
+    <div class="pt-14"></div> <!-- Spacer for fixed nav -->
+
+
     <!-- MAIN CONTENT -->
-    <div class="max-w-md mx-auto relative px-4 pt-16 z-10">
+    <div class="max-w-md mx-auto relative px-4 z-10">
         
         <!-- The Track -->
         <div class="track-line"></div>
@@ -169,6 +185,13 @@
                 <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent w-full h-full animate-scan pointer-events-none"></div>
             </div>
 
+            <!-- Scroll Down Arrow (New Feature) -->
+            <div id="scroll-prompt" class="mt-8 flex flex-col items-center opacity-0">
+                <span class="text-xs font-bold uppercase tracking-wider text-white/80 mb-1">Scroll Down</span>
+                <i class="fas fa-chevron-down text-2xl text-white animate-bounce"></i>
+            </div>
+
+
             <!-- Wheels -->
             <div class="train-wheel left-6 spin-wheel"></div>
             <div class="train-wheel right-6 spin-wheel"></div>
@@ -176,7 +199,7 @@
         </div>
 
         <!-- ✉️ CARRIAGE: INVITATION LETTER -->
-        <div class="train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-purple-400 border-b-8 border-purple-600 text-center opacity-0 translate-x-20">
+        <div id="carriage-invite" class="train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-purple-400 border-b-8 border-purple-600 text-center opacity-0 translate-x-20">
             <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-purple-500 text-white px-4 py-1 text-xs font-bold rounded-full uppercase shadow border-2 border-white">
                 Special Delivery
             </div>
@@ -205,7 +228,7 @@
         </div>
 
         <!-- 🚃 CARRIAGE 1: CELEBRATION -->
-        <div class="train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-train-blue border-b-8 border-blue-700 text-center opacity-0 translate-x-20">
+        <div id="carriage-celebration" class="train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-train-blue border-b-8 border-blue-700 text-center opacity-0 translate-x-20">
             <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-train-blue text-white px-4 py-1 text-xs font-bold rounded-full uppercase shadow border-2 border-white">
                 Carriage 01
             </div>
@@ -233,7 +256,7 @@
         </div>
 
         <!-- 🚃 CARRIAGE 2: LOCATION -->
-        <div class="train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-train-yellow border-b-8 border-yellow-500 text-center opacity-0 -translate-x-20">
+        <div id="carriage-location" class="train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-train-yellow border-b-8 border-yellow-500 text-center opacity-0 -translate-x-20">
             <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-train-yellow text-red-900 px-4 py-1 text-xs font-bold rounded-full uppercase shadow border-2 border-white">
                 Carriage 02
             </div>
@@ -244,7 +267,7 @@
 
             <div class="w-full h-40 bg-gray-200 rounded-lg overflow-hidden shadow-inner border-2 border-gray-200 mb-4 relative group">
                  <iframe 
-                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3609.3902164443643!2d55.27737558044955!3d25.223778720178988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f42edc1655555%3A0xe16ff90c3baca253!2sNassima%20Tower%20Hotel%20Apartments%20%7C%20Sheikh%20Zayed%20Road%20%7C%20Dubai!5e0!3m2!1sen!2sae!4v1763810525736!5m2!1sen!2sae" 
+                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3609.3902164443643!2d55.27737558044955!3d25.223778720178988!2m3!11f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f42edc1655555%3A0xe16ff90c3baca253!2sNassima%20Tower%20Hotel%20Apartments%20%7C%20Sheikh%20Zayed%20Road%20%7C%20Dubai!5e0!3m2!1sen!2sae!4v1763810525736!5m2!1sen!2sae" 
                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" class="grayscale group-hover:grayscale-0 transition duration-700">
                </iframe>
             </div>
@@ -263,12 +286,19 @@
         </div>
 
         <!-- 🚃 CARRIAGE 3: INFO -->
-        <div class="train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-grass border-b-8 border-green-600 text-center opacity-0 translate-x-20">
+        <div id="carriage-rules" class="train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-grass border-b-8 border-green-600 text-center opacity-0 translate-x-20">
             <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-grass text-green-900 px-4 py-1 text-xs font-bold rounded-full uppercase shadow border-2 border-white">
                 Carriage 03
             </div>
 
             <h2 class="text-2xl fun-font text-green-600 mb-4 mt-2">Trip Rules</h2>
+
+            <!-- Color Theme Instructions Updated -->
+            <div class="bg-yellow-50 p-4 rounded-xl border-2 border-yellow-200 mb-6">
+                <p class="text-sm font-bold text-yellow-800 mb-2">DRESS CODE: Choose your Train Color!</p>
+                <p class="text-xs text-gray-700 font-medium">Please wear any **colorful upper** (shirt, blouse, jacket) in one of the primary colors below to match the train theme.</p>
+            </div>
+
 
             <!-- Color Swatches -->
             <div class="flex justify-center gap-4 mb-6">
@@ -282,7 +312,7 @@
                 </div>
                 <div class="flex flex-col items-center gap-1">
                     <div class="w-10 h-10 rounded-full bg-train-yellow shadow-md border-2 border-white"></div>
-                    <span class="text-[10px] font-bold text-gray-400">YEL</span>
+                    <span class="text-[10px] font-bold text-gray-400">YELLOW</span>
                 </div>
             </div>
 
@@ -491,6 +521,14 @@
 
 
         // --- GSAP ANIMATIONS (EXISTING) ---
+        // --- 1. Scroll Prompt Fade In ---
+        gsap.to("#scroll-prompt", {
+            opacity: 1,
+            duration: 1.5,
+            delay: 1, // Wait for engine to load
+            ease: "power2.out"
+        });
+
         // --- 2. TRAIN ENGINE WOBBLE & BOUNCE ---
         const engineTimeline = gsap.timeline({ repeat: -1, yoyo: true });
         engineTimeline.to("#train-engine", {
@@ -612,6 +650,25 @@
         }
         setInterval(updateTimer, 1000);
         updateTimer();
+
+        // --- 6. SMOOTH SCROLLING FOR NAVIGATION ---
+        document.querySelectorAll('a.nav-link[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                const navHeight = document.getElementById('main-nav').offsetHeight;
+
+                if (targetElement) {
+                    const offset = targetElement.getBoundingClientRect().top + window.scrollY - navHeight - 20; // -20 for extra padding
+                    window.scrollTo({
+                        top: offset,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
 
     </script>
 </body>
