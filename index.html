@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hanzel's 2nd Birthday Express</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind Config - MUST be after Tailwind script is loaded -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'train-red': '#FF4757',
+                        'train-blue': '#2F80ED',
+                        'train-yellow': '#FFA502',
+                        'sky': '#E0F2FE',
+                        'grass': '#7BED9F'
+                    },
+                    fontFamily: {
+                        'fun': ['"Fredoka One"', 'cursive'],
+                        'body': ['"Poppins"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #E0F2FE;
+            overflow-x: hidden;
+        }
+        .fun-font { font-family: 'Fredoka One', cursive; }
+        
+        /* Train Components */
+        .train-wheel {
+            width: 50px; height: 50px;
+            background: #2f3542;
+            border-radius: 50%;
+            border: 4px dashed #a4b0be;
+            position: absolute; bottom: -25px;
+            z-index: 20;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .train-wheel::after {
+            content: ''; width: 12px; height: 12px;
+            background: #dfe4ea; border-radius: 50%;
+        }
+        
+        .coupler {
+            width: 20px; height: 40px;
+            background: #2f3542;
+            position: absolute; bottom: -40px; left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            border-radius: 4px;
+        }
+
+        .smoke-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: white;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Track */
+        .track-line {
+            background-image: linear-gradient(#57606f 50%, transparent 50%);
+            background-size: 6px 40px;
+            width: 6px; height: 100%;
+            position: absolute; left: 50%; top: 0;
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+        
+        /* Hide elements initially for GSAP reveal */
+        .gsap-reveal { visibility: hidden; }
+
+        /* Canvas z-index */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -10;
+        }
+    </style>
+</head>
+<body class="pb-32 relative">
+
+    <!-- THREE.JS CANVAS LAYER -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- MAIN CONTENT -->
+    <div class="max-w-md mx-auto relative px-4 pt-16 z-10">
+        
+        <!-- The Track -->
+        <div class="track-line"></div>
+
+        <!-- 🚂 ENGINE HERO -->
+        <div id="train-engine" class="relative bg-train-red text-white rounded-t-[40px] rounded-b-xl p-6 mb-20 shadow-2xl border-b-8 border-red-800 text-center transform origin-bottom">
+            
+            <!-- Chimney -->
+            <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-16 h-16 bg-gray-800 rounded-t-lg border-t-8 border-gray-600 flex justify-center">
+                <div id="smoke-point" class="absolute -top-2 w-2 h-2"></div>
+            </div>
+
+            <!-- Whistle Interaction -->
+            <button id="whistle-btn" class="absolute -top-6 right-4 w-14 h-14 bg-yellow-400 rounded-full border-4 border-yellow-600 shadow-lg z-30 flex items-center justify-center group cursor-pointer active:scale-90">
+                <i class="fas fa-bullhorn text-red-800 text-xl transform -rotate-12 group-hover:scale-110 transition"></i>
+                <span class="absolute -top-8 bg-black/70 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">TOOT!</span>
+            </button>
+
+            <div class="inline-block bg-train-yellow text-red-900 px-6 py-2 rounded-full text-xl font-fun mb-4 shadow-lg border-2 border-red-900 transform -rotate-2 hover:rotate-2 transition">
+                Chugga, Chugga, Two! Two!
+            </div>
+
+            <h1 class="text-5xl fun-font mb-4 drop-shadow-md stroke-black">Hanzel Drei</h1>
+
+            <!-- Engine Window (Photo) -->
+            <div class="w-56 h-56 mx-auto bg-sky-300 rounded-full border-[8px] border-gray-300 shadow-inner overflow-hidden relative mb-6 ring-4 ring-train-yellow">
+                <img src="https://res.cloudinary.com/dyxnnrpya/image/upload/v1763810182/unnamed_y7bpre.jpg" alt="Mario Hanzel" class="w-full h-full object-cover">
+                <!-- Glare -->
+                <div class="absolute top-4 right-6 w-8 h-8 bg-white/40 rounded-full blur-sm"></div>
+            </div>
+
+            <!-- Countdown Panel -->
+            <div class="bg-gray-800 rounded-xl p-3 border-4 border-gray-600 text-train-yellow mx-auto max-w-[260px] shadow-lg mb-4 relative overflow-hidden">
+                <div class="text-[10px] uppercase tracking-widest text-gray-400 mb-1">Departure Time</div>
+                <div id="countdown" class="font-mono text-xl font-bold flex justify-center gap-3">
+                    <!-- JS fills this -->
+                </div>
+                <!-- Scanning line effect -->
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent w-full h-full animate-scan pointer-events-none"></div>
+            </div>
+
+            <!-- Wheels -->
+            <div class="train-wheel left-6 spin-wheel"></div>
+            <div class="train-wheel right-6 spin-wheel"></div>
+            <div class="coupler"></div>
+        </div>
+
+        <!-- ✉️ CARRIAGE: INVITATION LETTER -->
+        <div class="train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-purple-400 border-b-8 border-purple-600 text-center opacity-0 translate-x-20">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-purple-500 text-white px-4 py-1 text-xs font-bold rounded-full uppercase shadow border-2 border-white">
+                Special Delivery
+            </div>
+
+            <h2 class="text-3xl fun-font text-purple-500 mb-4 mt-2">You're Invited!</h2>
+            
+            <div class="bg-yellow-50 p-6 rounded-lg border-2 border-yellow-200 relative shadow-inner text-left mx-2 transform -rotate-1 hover:rotate-0 transition duration-300">
+                <!-- Tape effect -->
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-yellow-200/50 rotate-1 transform"></div>
+                
+                <p class="fun-font text-xl text-yellow-600 mb-3">Dear Family & Friends,</p>
+                <p class="text-gray-700 text-sm leading-relaxed mb-3 font-medium">
+                    Pack your bags and grab your tickets! The train is leaving the station for a very special destination.
+                </p>
+                <p class="text-gray-600 text-sm leading-relaxed italic border-l-4 border-purple-300 pl-3">
+                    <strong>Hanzel Drei</strong> is turning TWO, and the journey wouldn't be the same without you. Please hop aboard for a night of fun, food, and celebration!
+                </p>
+                <div class="mt-4 text-right fun-font text-purple-500 text-lg">
+                    - The Atayde Family
+                </div>
+            </div>
+
+            <div class="train-wheel left-6 spin-wheel"></div>
+            <div class="train-wheel right-6 spin-wheel"></div>
+            <div class="coupler"></div>
+        </div>
+
+        <!-- 🚃 CARRIAGE 1: CELEBRATION -->
+        <div class="train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-train-blue border-b-8 border-blue-700 text-center opacity-0 translate-x-20">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-train-blue text-white px-4 py-1 text-xs font-bold rounded-full uppercase shadow border-2 border-white">
+                Carriage 01
+            </div>
+
+            <h2 class="text-3xl fun-font text-train-blue mb-3 mt-2">The Party!</h2>
+            <p class="text-gray-600 mb-4 text-sm leading-relaxed">
+                Our little superhero is turning 2! Join us for a dinner celebration full of joy.
+            </p>
+
+            <div class="relative w-full h-40 mb-4 group perspective-1000">
+                <img src="https://res.cloudinary.com/dyxnnrpya/image/upload/v1763810182/unnamed_1_v1l7fj.jpg" alt="Hanzel" class="w-full h-full object-cover rounded-lg shadow-md border-2 border-gray-100 transform transition duration-500 group-hover:rotate-y-12">
+            </div>
+            
+            <div class="bg-blue-50 text-blue-800 text-xs font-bold py-2 rounded-lg mb-2">
+                <i class="fas fa-calendar-day mr-1"></i> Saturday, Dec 13, 2025 @ 7 PM
+            </div>
+            
+            <div class="bg-pink-50 text-pink-600 text-xs font-bold py-2 rounded-lg">
+                <i class="fas fa-utensils mr-1"></i> Catering by Cake Tealicious
+            </div>
+
+            <div class="train-wheel left-6 spin-wheel"></div>
+            <div class="train-wheel right-6 spin-wheel"></div>
+            <div class="coupler"></div>
+        </div>
+
+        <!-- 🚃 CARRIAGE 2: LOCATION -->
+        <div class="train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-train-yellow border-b-8 border-yellow-500 text-center opacity-0 -translate-x-20">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-train-yellow text-red-900 px-4 py-1 text-xs font-bold rounded-full uppercase shadow border-2 border-white">
+                Carriage 02
+            </div>
+
+            <h2 class="text-3xl fun-font text-yellow-500 mb-2 mt-2">Station</h2>
+            <p class="font-bold text-gray-800 text-sm">Nassima Tower Hotel Apts</p>
+            <p class="text-xs text-gray-500 mb-4">Sheikh Zayed Road, Dubai</p>
+
+            <div class="w-full h-40 bg-gray-200 rounded-lg overflow-hidden shadow-inner border-2 border-gray-200 mb-4 relative group">
+                 <iframe 
+                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3609.3902164443643!2d55.27737558044955!3d25.223778720178988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f42edc1655555%3A0xe16ff90c3baca253!2sNassima%20Tower%20Hotel%20Apartments%20%7C%20Sheikh%20Zayed%20Road%20%7C%20Dubai!5e0!3m2!1sen!2sae!4v1763810525736!5m2!1sen!2sae" 
+                   width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" class="grayscale group-hover:grayscale-0 transition duration-700">
+               </iframe>
+            </div>
+
+            <div class="bg-red-50 border-l-4 border-train-red p-2 text-left flex items-center gap-3">
+                <i class="fas fa-id-card text-train-red text-xl"></i>
+                <div>
+                    <p class="text-[10px] font-bold text-train-red uppercase">Checkpoint</p>
+                    <p class="text-xs font-bold text-gray-800">Bring Emirates ID!</p>
+                </div>
+            </div>
+
+            <div class="train-wheel left-6 spin-wheel"></div>
+            <div class="train-wheel right-6 spin-wheel"></div>
+            <div class="coupler"></div>
+        </div>
+
+        <!-- 🚃 CARRIAGE 3: INFO -->
+        <div class="train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-grass border-b-8 border-green-600 text-center opacity-0 translate-x-20">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-grass text-green-900 px-4 py-1 text-xs font-bold rounded-full uppercase shadow border-2 border-white">
+                Carriage 03
+            </div>
+
+            <h2 class="text-2xl fun-font text-green-600 mb-4 mt-2">Trip Rules</h2>
+
+            <!-- Color Swatches -->
+            <div class="flex justify-center gap-4 mb-6">
+                <div class="flex flex-col items-center gap-1">
+                    <div class="w-10 h-10 rounded-full bg-train-red shadow-md border-2 border-white"></div>
+                    <span class="text-[10px] font-bold text-gray-400">RED</span>
+                </div>
+                <div class="flex flex-col items-center gap-1">
+                    <div class="w-10 h-10 rounded-full bg-train-blue shadow-md border-2 border-white"></div>
+                    <span class="text-[10px] font-bold text-gray-400">BLUE</span>
+                </div>
+                <div class="flex flex-col items-center gap-1">
+                    <div class="w-10 h-10 rounded-full bg-train-yellow shadow-md border-2 border-white"></div>
+                    <span class="text-[10px] font-bold text-gray-400">YEL</span>
+                </div>
+            </div>
+
+            <div class="text-left space-y-2 text-xs text-gray-600 font-medium bg-green-50 p-4 rounded-xl">
+                <p><i class="fas fa-hands-wash text-blue-400 w-5"></i> Sanitize hands often</p>
+                <p><i class="fas fa-ban text-red-400 w-5"></i> No smoking please</p>
+                <p><i class="fas fa-baby text-pink-400 w-5"></i> No kissing Hanzel</p>
+            </div>
+
+            <div class="train-wheel left-6 spin-wheel"></div>
+            <div class="train-wheel right-6 spin-wheel"></div>
+            <div class="coupler"></div>
+        </div>
+
+        <!-- 🛑 CABOOSE: CONTACTS -->
+        <div class="train-carriage relative bg-train-red text-white rounded-xl p-6 mb-12 shadow-xl border-b-8 border-red-900 text-center opacity-0 translate-y-20">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-red-900 text-white px-4 py-1 text-xs font-bold rounded-full uppercase shadow border-2 border-white">
+                Caboose
+            </div>
+
+            <h2 class="text-3xl fun-font mb-4 mt-2">Conductors</h2>
+            
+            <div class="space-y-3">
+                <a href="tel:0561560236" class="block bg-white/10 hover:bg-white/20 border border-white/30 p-3 rounded-xl flex items-center justify-between transition">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-white text-train-red flex items-center justify-center font-bold">M</div>
+                        <span>Marcc</span>
+                    </div>
+                    <i class="fas fa-phone"></i>
+                </a>
+                <a href="tel:0545422450" class="block bg-white/10 hover:bg-white/20 border border-white/30 p-3 rounded-xl flex items-center justify-between transition">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-white text-train-red flex items-center justify-center font-bold">S</div>
+                        <span>Sandey</span>
+                    </div>
+                    <i class="fas fa-phone"></i>
+                </a>
+            </div>
+
+            <div class="mt-8">
+                <img src="https://res.cloudinary.com/dyxnnrpya/image/upload/v1763810182/unnamed_y7bpre.jpg" alt="Small Hanzel" class="w-16 h-16 rounded-full border-4 border-white/50 mx-auto mb-2">
+                <p class="text-xs opacity-70">See you there!</p>
+            </div>
+
+            <div class="train-wheel left-6 spin-wheel bg-gray-800 border-gray-600"></div>
+            <div class="train-wheel right-6 spin-wheel bg-gray-800 border-gray-600"></div>
+            
+            <!-- Tail Light -->
+            <div id="tail-light" class="absolute bottom-4 left-1/2 -translate-x-1/2 w-4 h-4 bg-red-300 rounded-full shadow-[0_0_15px_white]"></div>
+        </div>
+
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        // Register GSAP Plugins
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- THREE.JS BACKGROUND SETUP ---
+        const initThreeJS = () => {
+            const canvas = document.getElementById('bg-canvas');
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xE0F2FE); // Light sky blue
+            
+            // INCREASED FOG DENSITY
+            scene.fog = new THREE.Fog(0xE0F2FE, 5, 40); // Fog for depth (5 is nearer, 40 is max visibility)
+
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // Lighting
+            const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x888888, 0.7); 
+            scene.add(hemisphereLight);
+
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+            dirLight.position.set(10, 25, 15);
+            dirLight.castShadow = false;
+            scene.add(dirLight);
+
+            // Ground - CHANGED TO MUTED COLOR (Dusty Beige/Gray)
+            const groundGeo = new THREE.PlaneGeometry(200, 200);
+            const groundMat = new THREE.MeshLambertMaterial({ color: 0xC8D0C4 }); // Muted, less vibrant color
+            const ground = new THREE.Mesh(groundGeo, groundMat);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = -2;
+            scene.add(ground);
+
+            // Procedural Objects Group
+            const worldGroup = new THREE.Group();
+            scene.add(worldGroup);
+
+            // Helper to make Stylized Trees - MUTED COLORS
+            const createTree = (x, z) => {
+                const group = new THREE.Group();
+                
+                const trunkHeight = gsap.utils.random(1.2, 1.8);
+                const trunkRadiusTop = gsap.utils.random(0.15, 0.25);
+                const trunkRadiusBottom = gsap.utils.random(0.25, 0.4);
+
+                // Trunk (less saturated brown)
+                const trunkGeo = new THREE.CylinderGeometry(trunkRadiusTop, trunkRadiusBottom, trunkHeight, 8);
+                const trunkMat = new THREE.MeshLambertMaterial({ color: new THREE.Color().setHex(0xA08060).multiplyScalar(gsap.utils.random(0.8, 1.2)) }); 
+                const trunk = new THREE.Mesh(trunkGeo, trunkMat);
+                trunk.position.y = trunkHeight / 2;
+                group.add(trunk);
+
+                // Leaves (muted green)
+                const leavesHeight = gsap.utils.random(1.8, 2.5);
+                const leavesRadius = gsap.utils.random(0.8, 1.2);
+                const leavesGeo = new THREE.ConeGeometry(leavesRadius, leavesHeight, 16); 
+                const leavesMat = new THREE.MeshLambertMaterial({ color: new THREE.Color().setHex(0x5E8D62).multiplyScalar(gsap.utils.random(0.8, 1.2)) }); // Muted, earthy green
+                const leaves = new THREE.Mesh(leavesGeo, leavesMat);
+                leaves.position.y = trunkHeight + (leavesHeight * 0.4); 
+                group.add(leaves);
+
+                group.position.set(x, -2, z);
+                return group;
+            };
+
+            // Helper to make Smoother, Layered Clouds
+            const createCloud = (x, y, z) => {
+                const group = new THREE.Group();
+                
+                // Icosahedron for rounder puffs
+                const baseGeo = new THREE.IcosahedronGeometry(1, 0); 
+                const mat = new THREE.MeshLambertMaterial({ 
+                    color: new THREE.Color(0xF0F8FF).multiplyScalar(gsap.utils.random(0.9, 1.05)),
+                    transparent: true, 
+                    opacity: gsap.utils.random(0.85, 0.95) 
+                });
+                
+                // Multiple puffs for a layered look
+                const numPuffs = gsap.utils.random(3, 6);
+                for(let i = 0; i < numPuffs; i++) {
+                    const puff = new THREE.Mesh(baseGeo, mat);
+                    puff.scale.setScalar(gsap.utils.random(0.7, 1.3));
+                    puff.position.set(
+                        gsap.utils.random(-1.5, 1.5),
+                        gsap.utils.random(-0.5, 0.5),
+                        gsap.utils.random(-1.5, 1.5)
+                    );
+                    group.add(puff);
+                }
+
+                group.position.set(x, y, z);
+                return group;
+            };
+
+            // Generate Scenery
+            for (let i = 0; i < 80; i++) { 
+                const z = -i * gsap.utils.random(2.5, 3.5); 
+                
+                // Trees: Avoid the center track (keep x > 3 or x < -3)
+                const xSide = Math.random() > 0.5 ? 1 : -1;
+                const xTree = (gsap.utils.random(3, 10)) * xSide; 
+                const tree = createTree(xTree, z);
+                worldGroup.add(tree);
+
+                // Clouds: Higher up and more frequent
+                if (i % gsap.utils.random(2, 4) === 0) { 
+                    const xCloud = (gsap.utils.random(-15, 15)); 
+                    const yCloud = gsap.utils.random(4, 9); 
+                    const cloud = createCloud(xCloud, yCloud, z - gsap.utils.random(3, 8)); 
+                    cloud.userData = { speed: gsap.utils.random(0.003, 0.008) }; 
+                    worldGroup.add(cloud);
+                }
+            }
+
+            // Camera initial position
+            camera.position.set(0, 1.5, 5); 
+
+            const animate = () => {
+                requestAnimationFrame(animate);
+                
+                // Subtle cloud movement
+                worldGroup.children.forEach(obj => {
+                    if (obj.userData.speed) {
+                        obj.rotation.y += obj.userData.speed;
+                    }
+                });
+
+                renderer.render(scene, camera);
+            };
+            animate();
+
+            // Resize Handler
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            // Scroll Sync
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                const targetZ = 5 - (scrollY * 0.025); 
+                camera.position.z = targetZ;
+            });
+        };
+
+        // Initialize 3D world
+        window.onload = initThreeJS;
+
+
+        // --- GSAP ANIMATIONS (EXISTING) ---
+        // --- 2. TRAIN ENGINE WOBBLE & BOUNCE ---
+        const engineTimeline = gsap.timeline({ repeat: -1, yoyo: true });
+        engineTimeline.to("#train-engine", {
+            y: -5,
+            rotation: 0.5,
+            duration: 0.3,
+            ease: "sine.inOut"
+        });
+
+        // Continuous Wheel Spin
+        gsap.to(".spin-wheel", {
+            rotation: 360,
+            duration: 2,
+            repeat: -1,
+            ease: "linear"
+        });
+
+        // Tail Light Pulse
+        gsap.to("#tail-light", {
+            opacity: 0.4,
+            duration: 0.8,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
+        });
+
+        // --- 3. CARRIAGE COUPLING (PHYSICS EFFECT) ---
+        const carriages = document.querySelectorAll(".train-carriage");
+        
+        carriages.forEach((carriage, index) => {
+            const xStart = index % 2 === 0 ? 100 : -100;
+            
+            gsap.to(carriage, {
+                scrollTrigger: {
+                    trigger: carriage,
+                    start: "top 80%",
+                    toggleActions: "play none none reverse"
+                },
+                x: 0,
+                opacity: 1,
+                duration: 1.2,
+                ease: "elastic.out(1, 0.5)",
+                onComplete: () => {
+                    gsap.to(carriage, {
+                        y: -3,
+                        rotation: index % 2 === 0 ? 0.5 : -0.5,
+                        duration: 0.4 + (Math.random() * 0.2),
+                        repeat: -1,
+                        yoyo: true,
+                        ease: "sine.inOut",
+                        delay: Math.random()
+                    });
+                }
+            });
+        });
+
+        // --- 4. SMOKE PARTICLE SYSTEM ---
+        function spawnSmoke(isBurst = false) {
+            const smokePoint = document.getElementById('smoke-point');
+            const rect = smokePoint.getBoundingClientRect();
+            const count = isBurst ? 8 : 1;
+
+            for(let i=0; i<count; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('smoke-particle');
+                document.body.appendChild(particle);
+
+                const size = gsap.utils.random(20, 50);
+                const xOffset = gsap.utils.random(-10, 10);
+                
+                gsap.set(particle, {
+                    x: rect.left + xOffset + window.scrollX,
+                    y: rect.top + window.scrollY,
+                    width: size,
+                    height: size,
+                    opacity: 0.8,
+                    scale: 0
+                });
+
+                gsap.to(particle, {
+                    y: `-=${gsap.utils.random(100, 200)}`,
+                    x: `+=${gsap.utils.random(-50, 50)}`,
+                    scale: gsap.utils.random(2, 4),
+                    opacity: 0,
+                    duration: gsap.utils.random(2, 4),
+                    ease: "power1.out",
+                    onComplete: () => particle.remove()
+                });
+            }
+        }
+        setInterval(() => spawnSmoke(false), 600);
+
+        const whistleBtn = document.getElementById('whistle-btn');
+        whistleBtn.addEventListener('click', () => {
+            gsap.to(whistleBtn, { scale: 0.8, duration: 0.1, yoyo: true, repeat: 1 });
+            gsap.to("body", { x: 5, duration: 0.05, repeat: 5, yoyo: true });
+            spawnSmoke(true);
+        });
+
+        // --- 5. COUNTDOWN TIMER ---
+        const targetDate = new Date("December 13, 2025 19:00:00").getTime();
+        function updateTimer() {
+            const now = new Date().getTime();
+            const dist = targetDate - now;
+            
+            if (dist < 0) {
+                document.getElementById("countdown").innerHTML = "PARTY TIME!";
+                return;
+            }
+
+            const d = Math.floor(dist / (1000 * 60 * 60 * 24));
+            const h = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            
+            document.getElementById("countdown").innerHTML = `
+                <div>${d}<span class="text-[10px]">d</span></div>
+                <div class="text-gray-500">:</div>
+                <div>${h}<span class="text-[10px]">h</span></div>
+            `;
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+    </script>
+</body>
+</html>
