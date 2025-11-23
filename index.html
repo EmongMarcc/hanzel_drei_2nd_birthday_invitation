@@ -65,174 +65,159 @@
         
         html {
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
         
-        /* Train Lever Scroll Indicator Styles */
+        /* Train Lever Styles */
         .train-lever-container {
             position: relative;
-            width: 60px;
-            height: 80px;
+            width: 100px;
+            height: 180px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
         }
         
-        /* Lever Base */
+        /* Lever Base/Housing */
         .lever-base {
-            width: 40px;
-            height: 25px;
-            background: linear-gradient(145deg, #2f3542, #1e272e);
-            border-radius: 8px;
             position: relative;
+            width: 70px;
+            height: 100px;
+            background: linear-gradient(145deg, #2f3542 0%, #1e272e 100%);
+            border-radius: 15px;
+            border: 3px solid #57606f;
             box-shadow: 
-                0 4px 8px rgba(0,0,0,0.3),
-                inset 0 1px 2px rgba(255,255,255,0.1);
-            border: 1px solid #57606f;
+                inset 0 2px 5px rgba(0,0,0,0.5),
+                0 8px 20px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
         }
         
-        /* Base Bolts */
-        .base-bolts {
+        /* Lever Slot */
+        .lever-slot {
             position: absolute;
-            inset: 0;
+            top: 15px;
+            width: 8px;
+            height: 60px;
+            background: linear-gradient(to bottom, #1e272e, #0c1014);
+            border-radius: 4px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
         }
-        
-        .bolt {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: #a4b0be;
-            border-radius: 50%;
-            box-shadow: inset 0 1px 1px rgba(0,0,0,0.3);
-        }
-        
-        .bolt-1 { top: 4px; left: 4px; }
-        .bolt-2 { top: 4px; right: 4px; }
-        .bolt-3 { bottom: 4px; left: 4px; }
-        .bolt-4 { bottom: 4px; right: 4px; }
         
         /* Lever Handle */
         .lever-handle {
-            width: 12px;
-            height: 45px;
-            background: linear-gradient(145deg, #dfe4ea, #c8d6e5);
-            border-radius: 6px;
-            position: relative;
-            margin-top: -8px;
-            box-shadow: 
-                0 3px 6px rgba(0,0,0,0.2),
-                inset 0 1px 2px rgba(255,255,255,0.3);
-            border: 1px solid #a4b0be;
-            animation: lever-pull 3s ease-in-out infinite;
-            transform-origin: bottom center;
-        }
-        
-        /* Handle Grip */
-        .handle-grip {
             position: absolute;
-            top: 8px;
+            top: 15px;
             left: 50%;
             transform: translateX(-50%);
-            width: 16px;
-            height: 20px;
-            background: linear-gradient(145deg, #FF4757, #ff3742);
-            border-radius: 8px;
-            border: 1px solid #c23616;
+            width: 12px;
+            height: 50px;
+            background: linear-gradient(145deg, #FFA502, #ff8c00);
+            border-radius: 6px;
             box-shadow: 
-                0 2px 4px rgba(0,0,0,0.3),
+                0 4px 10px rgba(255, 165, 2, 0.4),
+                inset 0 1px 2px rgba(255,255,255,0.3);
+            transition: top 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            z-index: 2;
+        }
+        
+        /* Lever Knob */
+        .lever-knob {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 24px;
+            background: radial-gradient(circle at 30% 30%, #ff4757, #c23646);
+            border-radius: 50%;
+            border: 2px solid #2f3542;
+            box-shadow: 
+                0 4px 8px rgba(255, 71, 87, 0.5),
                 inset 0 1px 2px rgba(255,255,255,0.2);
         }
         
-        /* Handle Shine Effect */
-        .handle-shine {
+        /* Lever Grip Lines */
+        .lever-handle::before,
+        .lever-handle::after {
+            content: '';
             position: absolute;
-            top: 2px;
             left: 2px;
             right: 2px;
-            height: 8px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
-            border-radius: 4px;
-        }
-        
-        /* Action Lines */
-        .action-line {
-            position: absolute;
-            right: -15px;
-            width: 8px;
             height: 2px;
-            background: #FFA502;
-            border-radius: 1px;
-            opacity: 0;
+            background: rgba(0,0,0,0.3);
         }
         
-        .action-line-1 {
-            top: 20px;
-            animation: action-flash-1 3s ease-in-out infinite;
+        .lever-handle::before {
+            top: 15px;
         }
         
-        .action-line-2 {
-            top: 30px;
-            animation: action-flash-2 3s ease-in-out infinite;
+        .lever-handle::after {
+            top: 25px;
         }
         
-        .action-line-3 {
-            top: 40px;
-            animation: action-flash-3 3s ease-in-out infinite;
-        }
-        
-        /* Text Label */
-        .lever-text {
+        /* Indicator Lights */
+        .lever-lights {
             position: absolute;
-            bottom: -20px;
-            font-size: 10px;
+            bottom: 10px;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .lever-light {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #1e272e;
+            border: 1px solid #57606f;
+            transition: all 0.3s ease;
+        }
+        
+        .lever-light.active {
+            background: #2F80ED;
+            box-shadow: 0 0 10px #2F80ED, 0 0 20px rgba(47, 128, 237, 0.5);
+        }
+        
+        /* Label Plate */
+        .lever-label {
+            position: absolute;
+            bottom: -35px;
+            background: #2f3542;
+            color: #FFA502;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 8px;
             font-weight: 700;
-            color: #2f3542;
             letter-spacing: 1px;
-            font-family: 'Fredoka One', cursive;
+            border: 1px solid #57606f;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
         
-        /* Keyframe Animations */
-        @keyframes lever-pull {
-            0%, 70%, 100% { 
-                transform: rotate(0deg);
-            }
-            15%, 55% { 
-                transform: rotate(-15deg);
-            }
+        /* Mounting Bolts */
+        .lever-bolt {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #57606f;
+            border-radius: 50%;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
         }
         
-        @keyframes action-flash-1 {
-            0%, 85%, 100% { 
-                opacity: 0;
-                transform: scaleX(0);
-            }
-            15%, 25% { 
-                opacity: 1;
-                transform: scaleX(1);
-            }
+        .lever-bolt:nth-child(1) { top: 5px; left: 5px; }
+        .lever-bolt:nth-child(2) { top: 5px; right: 5px; }
+        .lever-bolt:nth-child(3) { bottom: 5px; left: 5px; }
+        .lever-bolt:nth-child(4) { bottom: 5px; right: 5px; }
+        
+        /* Glow effect when active */
+        .lever-base.active {
+            box-shadow: 
+                inset 0 2px 5px rgba(0,0,0,0.5),
+                0 8px 20px rgba(0,0,0,0.3),
+                0 0 20px rgba(47, 128, 237, 0.3);
         }
         
-        @keyframes action-flash-2 {
-            0%, 85%, 100% { 
-                opacity: 0;
-                transform: scaleX(0);
-            }
-            20%, 30% { 
-                opacity: 0.8;
-                transform: scaleX(1.2);
-            }
-        }
-        
-        @keyframes action-flash-3 {
-            0%, 85%, 100% { 
-                opacity: 0;
-                transform: scaleX(0);
-            }
-            25%, 35% { 
-                opacity: 0.6;
-                transform: scaleX(0.8);
-            }
-        }
         .fun-font { font-family: 'Fredoka One', cursive; }
         
         /* Three.js Canvas - Fixed background positioning */
@@ -302,7 +287,7 @@
         <div class="track-line"></div>
 
         <!-- 🚂 ENGINE HERO -->
-        <div id="train-engine" class="relative bg-train-red text-white rounded-t-[40px] rounded-b-xl p-6 mb-20 shadow-2xl border-b-8 border-red-800 text-center transform origin-bottom">
+        <div id="train-engine" class="scroll-section relative bg-train-red text-white rounded-t-[40px] rounded-b-xl p-6 mb-20 shadow-2xl border-b-8 border-red-800 text-center transform origin-bottom">
             
             <!-- Chimney -->
             <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-16 h-16 bg-gray-800 rounded-t-lg border-t-8 border-gray-600 flex justify-center">
@@ -344,37 +329,41 @@
             <div class="coupler"></div>
         </div>
 
-        <!-- Train Lever Scroll Indicator - Fixed positioned on left center -->
-        <div id="scroll-prompt" class="fixed left-6 top-1/2 transform -translate-y-1/2 opacity-0 z-50">
+        <!-- Train Lever Control - Fixed positioned on left center -->
+        <div id="train-lever" class="fixed left-6 top-1/2 transform -translate-y-1/2 opacity-0 z-50">
             <div class="train-lever-container">
-                <!-- Lever Base -->
                 <div class="lever-base">
-                    <div class="base-bolts">
-                        <div class="bolt bolt-1"></div>
-                        <div class="bolt bolt-2"></div>
-                        <div class="bolt bolt-3"></div>
-                        <div class="bolt bolt-4"></div>
+                    <!-- Mounting Bolts -->
+                    <div class="lever-bolt"></div>
+                    <div class="lever-bolt"></div>
+                    <div class="lever-bolt"></div>
+                    <div class="lever-bolt"></div>
+                    
+                    <!-- Lever Slot -->
+                    <div class="lever-slot"></div>
+                    
+                    <!-- Lever Handle -->
+                    <div class="lever-handle">
+                        <div class="lever-knob"></div>
+                    </div>
+                    
+                    <!-- Indicator Lights -->
+                    <div class="lever-lights">
+                        <div class="lever-light" data-section="0"></div>
+                        <div class="lever-light" data-section="1"></div>
+                        <div class="lever-light" data-section="2"></div>
+                        <div class="lever-light" data-section="3"></div>
+                        <div class="lever-light" data-section="4"></div>
                     </div>
                 </div>
                 
-                <!-- Lever Handle -->
-                <div class="lever-handle">
-                    <div class="handle-grip"></div>
-                    <div class="handle-shine"></div>
-                </div>
-                
-                <!-- Action Lines -->
-                <div class="action-line action-line-1"></div>
-                <div class="action-line action-line-2"></div>
-                <div class="action-line action-line-3"></div>
-                
-                <!-- Text Label -->
-                <div class="lever-text">SCROLL</div>
+                <!-- Label Plate -->
+                <div class="lever-label">THROTTLE</div>
             </div>
         </div>
 
         <!-- ✉️ CARRIAGE: INVITATION LETTER -->
-        <div id="carriage-invite" class="train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-purple-400 border-b-8 border-purple-600 text-center opacity-100 translate-x-0">
+        <div id="carriage-invite" class="scroll-section train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-purple-400 border-b-8 border-purple-600 text-center opacity-100 translate-x-0">
             <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-purple-500 text-white px-4 py-1 text-xs font-bold rounded-full uppercase shadow border-2 border-white">
                 Special Delivery
             </div>
@@ -403,7 +392,7 @@
         </div>
 
         <!-- 🚃 CARRIAGE 1: CELEBRATION -->
-        <div id="carriage-celebration" class="train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-train-blue border-b-8 border-blue-700 text-center opacity-0 translate-x-20">
+        <div id="carriage-celebration" class="scroll-section train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-train-blue border-b-8 border-blue-700 text-center opacity-0 translate-x-20">
             <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-train-blue text-white px-4 py-1 text-xs font-bold rounded-full uppercase shadow border-2 border-white">
                 Carriage 01
             </div>
@@ -431,7 +420,7 @@
         </div>
 
         <!-- 🚃 CARRIAGE 2: LOCATION -->
-        <div id="carriage-location" class="train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-train-yellow border-b-8 border-yellow-500 text-center opacity-0 -translate-x-20">
+        <div id="carriage-location" class="scroll-section train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-train-yellow border-b-8 border-yellow-500 text-center opacity-0 -translate-x-20">
             <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-train-yellow text-red-900 px-4 py-1 text-xs font-bold rounded-full uppercase shadow border-2 border-white">
                 Carriage 02
             </div>
@@ -461,7 +450,7 @@
         </div>
 
         <!-- 🚃 CARRIAGE 3: INFO -->
-        <div id="carriage-rules" class="train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-grass border-b-8 border-green-600 text-center opacity-0 translate-x-20">
+        <div id="carriage-rules" class="scroll-section train-carriage relative bg-white rounded-xl p-6 mb-20 shadow-xl border-t-4 border-grass border-b-8 border-green-600 text-center opacity-0 translate-x-20">
             <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-grass text-green-900 px-4 py-1 text-xs font-bold rounded-full uppercase shadow border-2 border-white">
                 Carriage 03
             </div>
@@ -502,7 +491,7 @@
         </div>
 
         <!-- 🛑 CABOOSE: CONTACTS -->
-        <div class="train-carriage relative bg-train-red text-white rounded-xl p-6 mb-12 shadow-xl border-b-8 border-red-900 text-center opacity-0 translate-y-20">
+        <div id="caboose" class="scroll-section train-carriage relative bg-train-red text-white rounded-xl p-6 mb-12 shadow-xl border-b-8 border-red-900 text-center opacity-0 translate-y-20">
             <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-red-900 text-white px-4 py-1 text-xs font-bold rounded-full uppercase shadow border-2 border-white">
                 Caboose
             </div>
@@ -545,14 +534,101 @@
         // Register GSAP Plugins
         gsap.registerPlugin(ScrollTrigger);
 
+        // --- AUTO SCROLL SYSTEM ---
+        let autoScrollEnabled = true;
+        let currentSectionIndex = 0;
+        let autoScrollInterval = null;
+        let userHasInterrupted = false;
+
+        // Get all scroll sections
+        const sections = document.querySelectorAll('.scroll-section');
+
+        // Function to scroll to a specific section
+        function scrollToSection(index) {
+            if (index >= 0 && index < sections.length) {
+                const section = sections[index];
+                const yOffset = -20; // Small offset from top
+                const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                
+                window.scrollTo({
+                    top: y,
+                    behavior: 'smooth'
+                });
+                
+                currentSectionIndex = index;
+                updateLeverLights(index);
+            }
+        }
+
+        // Update lever indicator lights
+        function updateLeverLights(activeIndex) {
+            const lights = document.querySelectorAll('.lever-light');
+            lights.forEach((light, index) => {
+                if (index === activeIndex) {
+                    light.classList.add('active');
+                } else {
+                    light.classList.remove('active');
+                }
+            });
+        }
+
+        // Start auto-scroll
+        function startAutoScroll() {
+            if (autoScrollEnabled && !userHasInterrupted) {
+                autoScrollInterval = setInterval(() => {
+                    currentSectionIndex++;
+                    if (currentSectionIndex >= sections.length) {
+                        stopAutoScroll();
+                        return;
+                    }
+                    scrollToSection(currentSectionIndex);
+                }, 6000); // 6 seconds per section
+            }
+        }
+
+        // Stop auto-scroll
+        function stopAutoScroll() {
+            if (autoScrollInterval) {
+                clearInterval(autoScrollInterval);
+                autoScrollInterval = null;
+            }
+            autoScrollEnabled = false;
+        }
+
+        // Detect user scroll interruption
+        let scrollTimeout;
+        let isAutoScrolling = false;
+
+        function handleUserScroll() {
+            if (!userHasInterrupted) {
+                userHasInterrupted = true;
+                stopAutoScroll();
+                console.log('Auto-scroll interrupted by user');
+            }
+        }
+
+        // Listen for various scroll events
+        window.addEventListener('wheel', handleUserScroll, { passive: true });
+        window.addEventListener('touchmove', handleUserScroll, { passive: true });
+        window.addEventListener('keydown', (e) => {
+            // Detect arrow keys, space, page up/down
+            if ([32, 33, 34, 35, 36, 37, 38, 39, 40].includes(e.keyCode)) {
+                handleUserScroll();
+            }
+        });
+
+        // Start auto-scroll after page loads
+        setTimeout(() => {
+            startAutoScroll();
+        }, 2000); // Wait 2 seconds before starting
+
         // --- THREE.JS BACKGROUND SETUP ---
         const initThreeJS = () => {
             const canvas = document.getElementById('bg-canvas');
             const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xE0F2FE); // Light sky blue
+            scene.background = new THREE.Color(0xE0F2FE);
             
-            // INCREASED FOG DENSITY
-            scene.fog = new THREE.Fog(0xE0F2FE, 5, 40); // Fog for depth (5 is nearer, 40 is max visibility)
+            scene.fog = new THREE.Fog(0xE0F2FE, 5, 40);
 
             const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
@@ -560,7 +636,6 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-            // Lighting
             const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x888888, 0.7); 
             scene.add(hemisphereLight);
 
@@ -569,19 +644,16 @@
             dirLight.castShadow = false;
             scene.add(dirLight);
 
-            // Ground - CHANGED TO MUTED COLOR (Dusty Beige/Gray)
             const groundGeo = new THREE.PlaneGeometry(200, 200);
-            const groundMat = new THREE.MeshLambertMaterial({ color: 0xC8D0C4 }); // Muted, less vibrant color
+            const groundMat = new THREE.MeshLambertMaterial({ color: 0xC8D0C4 });
             const ground = new THREE.Mesh(groundGeo, groundMat);
             ground.rotation.x = -Math.PI / 2;
             ground.position.y = -2;
             scene.add(ground);
 
-            // Procedural Objects Group
             const worldGroup = new THREE.Group();
             scene.add(worldGroup);
 
-            // Helper to make Stylized Trees - MUTED COLORS
             const createTree = (x, z) => {
                 const group = new THREE.Group();
                 
@@ -589,18 +661,16 @@
                 const trunkRadiusTop = gsap.utils.random(0.15, 0.25);
                 const trunkRadiusBottom = gsap.utils.random(0.25, 0.4);
 
-                // Trunk (less saturated brown)
                 const trunkGeo = new THREE.CylinderGeometry(trunkRadiusTop, trunkRadiusBottom, trunkHeight, 8);
                 const trunkMat = new THREE.MeshLambertMaterial({ color: new THREE.Color().setHex(0xA08060).multiplyScalar(gsap.utils.random(0.8, 1.2)) }); 
                 const trunk = new THREE.Mesh(trunkGeo, trunkMat);
                 trunk.position.y = trunkHeight / 2;
                 group.add(trunk);
 
-                // Leaves (muted green)
                 const leavesHeight = gsap.utils.random(1.8, 2.5);
                 const leavesRadius = gsap.utils.random(0.8, 1.2);
                 const leavesGeo = new THREE.ConeGeometry(leavesRadius, leavesHeight, 16); 
-                const leavesMat = new THREE.MeshLambertMaterial({ color: new THREE.Color().setHex(0x5E8D62).multiplyScalar(gsap.utils.random(0.8, 1.2)) }); // Muted, earthy green
+                const leavesMat = new THREE.MeshLambertMaterial({ color: new THREE.Color().setHex(0x5E8D62).multiplyScalar(gsap.utils.random(0.8, 1.2)) });
                 const leaves = new THREE.Mesh(leavesGeo, leavesMat);
                 leaves.position.y = trunkHeight + (leavesHeight * 0.4); 
                 group.add(leaves);
@@ -609,11 +679,9 @@
                 return group;
             };
 
-            // Helper to make Smoother, Layered Clouds
             const createCloud = (x, y, z) => {
                 const group = new THREE.Group();
                 
-                // Icosahedron for rounder puffs
                 const baseGeo = new THREE.IcosahedronGeometry(1, 0); 
                 const mat = new THREE.MeshLambertMaterial({ 
                     color: new THREE.Color(0xF0F8FF).multiplyScalar(gsap.utils.random(0.9, 1.05)),
@@ -621,7 +689,6 @@
                     opacity: gsap.utils.random(0.85, 0.95) 
                 });
                 
-                // Multiple puffs for a layered look
                 const numPuffs = gsap.utils.random(3, 6);
                 for(let i = 0; i < numPuffs; i++) {
                     const puff = new THREE.Mesh(baseGeo, mat);
@@ -638,17 +705,14 @@
                 return group;
             };
 
-            // Generate Scenery
             for (let i = 0; i < 80; i++) { 
                 const z = -i * gsap.utils.random(2.5, 3.5); 
                 
-                // Trees: Avoid the center track (keep x > 3 or x < -3)
                 const xSide = Math.random() > 0.5 ? 1 : -1;
                 const xTree = (gsap.utils.random(3, 10)) * xSide; 
                 const tree = createTree(xTree, z);
                 worldGroup.add(tree);
 
-                // Clouds: Higher up and more frequent
                 if (i % gsap.utils.random(2, 4) === 0) { 
                     const xCloud = (gsap.utils.random(-15, 15)); 
                     const yCloud = gsap.utils.random(4, 9); 
@@ -658,13 +722,11 @@
                 }
             }
 
-            // Camera initial position
             camera.position.set(0, 1.5, 5); 
 
             const animate = () => {
                 requestAnimationFrame(animate);
                 
-                // Subtle cloud movement
                 worldGroup.children.forEach(obj => {
                     if (obj.userData.speed) {
                         obj.rotation.y += obj.userData.speed;
@@ -675,130 +737,53 @@
             };
             animate();
 
-            // Resize Handler
             window.addEventListener('resize', () => {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
             });
 
-            // Scroll Sync - Adjusted for fixed background
             window.addEventListener('scroll', () => {
                 const scrollY = window.scrollY;
-                const targetZ = 5 - (scrollY * 0.015); // Reduced scroll effect for more stable background
+                const targetZ = 5 - (scrollY * 0.015);
                 camera.position.z = targetZ;
             });
         };
 
-        // Initialize 3D world
         window.onload = initThreeJS;
 
         // --- GSAP ANIMATIONS ---
-        // Auto-scroll functionality
-        let autoScrollEnabled = true;
-        let autoScrollTimeout;
-        let userHasScrolled = false;
-        let currentCarriageIndex = 0;
-        
-        // List of carriages to scroll through
-        const carriages = [
-            "#carriage-invite",
-            "#carriage-celebration", 
-            "#carriage-location",
-            "#carriage-rules",
-            ".train-carriage:last-child" // Caboose
-        ];
-
-        // Auto-scroll through carriages one by one
-        const autoScrollToNextCarriage = () => {
-            if (!autoScrollEnabled || userHasScrolled || currentCarriageIndex >= carriages.length) {
-                return;
-            }
-            
-            const targetCarriage = carriages[currentCarriageIndex];
-            
-            gsap.to(window, {
-                duration: 2.5,
-                scrollTo: {
-                    y: targetCarriage,
-                    offsetY: 20 // Small offset for better viewing
-                },
-                ease: "power2.inOut",
-                onComplete: () => {
-                    currentCarriageIndex++;
-                    
-                    // Schedule next carriage scroll if not at the end
-                    if (currentCarriageIndex < carriages.length && autoScrollEnabled && !userHasScrolled) {
-                        setTimeout(() => {
-                            autoScrollToNextCarriage();
-                        }, 3500); // 3.5 seconds to view each carriage
-                    }
-                }
-            });
-        };
-
-        // Start auto-scroll after page loads
-        const startAutoScroll = () => {
-            if (!autoScrollEnabled) return;
-            
-            autoScrollTimeout = setTimeout(() => {
-                if (autoScrollEnabled && !userHasScrolled) {
-                    autoScrollToNextCarriage();
-                }
-            }, 3500); // Wait 3.5 seconds before starting auto-scroll sequence
-        };
-
-        // Detect user scroll and disable auto-scroll
-        let scrollTimeout;
-        const handleUserScroll = () => {
-            userHasScrolled = true;
-            autoScrollEnabled = false;
-            clearTimeout(autoScrollTimeout);
-            
-            // Hide scroll prompt when user scrolls
-            if (window.scrollY > 50) {
-                gsap.to("#scroll-prompt", {
-                    opacity: 0,
-                    duration: 0.5,
-                    ease: "power2.out"
-                });
-            } else if (window.scrollY === 0 && !autoScrollEnabled) {
-                // Show scroll prompt again if user scrolls back to top
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    gsap.to("#scroll-prompt", {
-                        opacity: 1,
-                        duration: 0.5,
-                        ease: "power2.out"
-                    });
-                }, 1000);
-            }
-        };
-
-        // Listen for user scroll with throttling to avoid excessive calls
-        let isScrolling = false;
-        window.addEventListener('scroll', () => {
-            if (!isScrolling) {
-                window.requestAnimationFrame(() => {
-                    handleUserScroll();
-                    isScrolling = false;
-                });
-                isScrolling = true;
-            }
-        }, { passive: true });
-
-        // --- 1. Scroll Prompt Fade In ---
-        gsap.to("#scroll-prompt", {
+        // --- 1. Train Lever Fade In ---
+        gsap.to("#train-lever", {
             opacity: 1,
             duration: 1.5,
             delay: 1,
             ease: "power2.out"
         });
 
-        // Start auto-scroll sequence
-        startAutoScroll();
+        // --- 2. Lever Animation Based on Scroll ---
+        const leverHandle = document.querySelector('.lever-handle');
+        const leverBase = document.querySelector('.lever-base');
 
-        // --- 2. TRAIN ENGINE WOBBLE & BOUNCE ---
+        window.addEventListener('scroll', () => {
+            const scrollPercentage = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+            const leverPosition = 15 + (scrollPercentage * 45); // Move from top (15px) to bottom (60px)
+            
+            leverHandle.style.top = leverPosition + 'px';
+            
+            // Add glow effect when moving
+            if (scrollPercentage > 0.1) {
+                leverBase.classList.add('active');
+            } else {
+                leverBase.classList.remove('active');
+            }
+            
+            // Update which light is active based on scroll position
+            const sectionIndex = Math.min(Math.floor(scrollPercentage * sections.length), sections.length - 1);
+            updateLeverLights(sectionIndex);
+        });
+
+        // --- 3. TRAIN ENGINE WOBBLE & BOUNCE ---
         const engineTimeline = gsap.timeline({ repeat: -1, yoyo: true });
         engineTimeline.to("#train-engine", {
             y: -5,
@@ -824,12 +809,10 @@
             ease: "sine.inOut"
         });
 
-        // --- 3. CARRIAGE COUPLING (PHYSICS EFFECT) ---
+        // --- 4. CARRIAGE COUPLING (PHYSICS EFFECT) ---
         const carriages = document.querySelectorAll(".train-carriage");
         
-        // Skip the first carriage (invitation) since it's already visible
         carriages.forEach((carriage, index) => {
-            // Don't animate the first carriage since it's already visible
             if (index === 0) return;
             
             const xStart = index % 2 === 0 ? 100 : -100;
@@ -858,7 +841,6 @@
             });
         });
 
-        // Add animation for the first carriage (already visible)
         gsap.to("#carriage-invite", {
             y: -3,
             rotation: 0.5,
@@ -866,10 +848,10 @@
             repeat: -1,
             yoyo: true,
             ease: "sine.inOut",
-            delay: 2 // Start after page loads
+            delay: 2
         });
 
-        // --- 4. SMOKE PARTICLE SYSTEM ---
+        // --- 5. SMOKE PARTICLE SYSTEM ---
         function spawnSmoke(isBurst = false) {
             const smokePoint = document.getElementById('smoke-point');
             const rect = smokePoint.getBoundingClientRect();
@@ -912,7 +894,7 @@
             spawnSmoke(true);
         });
 
-        // --- 5. COUNTDOWN TIMER ---
+        // --- 6. COUNTDOWN TIMER ---
         const targetDate = new Date("December 13, 2025 19:00:00").getTime();
         function updateTimer() {
             const now = new Date().getTime();
