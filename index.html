@@ -71,53 +71,54 @@
         /* Train Lever Styles */
         .train-lever-container {
             position: relative;
-            width: 100px;
-            height: 180px;
+            width: 70px;
+            height: 130px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            transform: scale(0.75);
         }
         
         /* Lever Base/Housing */
         .lever-base {
             position: relative;
-            width: 70px;
-            height: 100px;
+            width: 60px;
+            height: 85px;
             background: linear-gradient(145deg, #2f3542 0%, #1e272e 100%);
-            border-radius: 15px;
-            border: 3px solid #57606f;
+            border-radius: 12px;
+            border: 2px solid #57606f;
             box-shadow: 
                 inset 0 2px 5px rgba(0,0,0,0.5),
-                0 8px 20px rgba(0,0,0,0.3);
+                0 6px 15px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 10px;
+            padding: 8px;
         }
         
         /* Lever Slot */
         .lever-slot {
             position: absolute;
-            top: 15px;
-            width: 8px;
-            height: 60px;
+            top: 12px;
+            width: 6px;
+            height: 50px;
             background: linear-gradient(to bottom, #1e272e, #0c1014);
-            border-radius: 4px;
+            border-radius: 3px;
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
         }
         
         /* Lever Handle */
         .lever-handle {
             position: absolute;
-            top: 15px;
+            top: 12px;
             left: 50%;
             transform: translateX(-50%);
-            width: 12px;
-            height: 50px;
+            width: 10px;
+            height: 42px;
             background: linear-gradient(145deg, #FFA502, #ff8c00);
-            border-radius: 6px;
+            border-radius: 5px;
             box-shadow: 
-                0 4px 10px rgba(255, 165, 2, 0.4),
+                0 3px 8px rgba(255, 165, 2, 0.4),
                 inset 0 1px 2px rgba(255,255,255,0.3);
             transition: top 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
             z-index: 2;
@@ -126,16 +127,16 @@
         /* Lever Knob */
         .lever-knob {
             position: absolute;
-            top: -8px;
+            top: -7px;
             left: 50%;
             transform: translateX(-50%);
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             background: radial-gradient(circle at 30% 30%, #ff4757, #c23646);
             border-radius: 50%;
             border: 2px solid #2f3542;
             box-shadow: 
-                0 4px 8px rgba(255, 71, 87, 0.5),
+                0 3px 6px rgba(255, 71, 87, 0.5),
                 inset 0 1px 2px rgba(255,255,255,0.2);
         }
         
@@ -146,16 +147,16 @@
             position: absolute;
             left: 2px;
             right: 2px;
-            height: 2px;
+            height: 1px;
             background: rgba(0,0,0,0.3);
         }
         
         .lever-handle::before {
-            top: 15px;
+            top: 12px;
         }
         
         .lever-handle::after {
-            top: 25px;
+            top: 20px;
         }
         
         /* Indicator Lights */
@@ -329,8 +330,8 @@
             <div class="coupler"></div>
         </div>
 
-        <!-- Train Lever Control - Fixed positioned on left center -->
-        <div id="train-lever" class="fixed left-6 top-1/2 transform -translate-y-1/2 opacity-0 z-50">
+        <!-- Train Lever Control - Fixed positioned on left bottom -->
+        <div id="train-lever" class="fixed left-6 bottom-8 opacity-0 z-50">
             <div class="train-lever-container">
                 <div class="lever-base">
                     <!-- Mounting Bolts -->
@@ -767,7 +768,7 @@
 
         window.addEventListener('scroll', () => {
             const scrollPercentage = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-            const leverPosition = 15 + (scrollPercentage * 45); // Move from top (15px) to bottom (60px)
+            const leverPosition = 12 + (scrollPercentage * 38); // Move from top (12px) to bottom (50px)
             
             leverHandle.style.top = leverPosition + 'px';
             
