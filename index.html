@@ -66,6 +66,17 @@
         html {
             overflow-x: hidden;
         }
+        
+        /* Scroll prompt styling */
+        #scroll-prompt {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+        
+        #scroll-prompt span {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
         .fun-font { font-family: 'Fredoka One', cursive; }
         
         /* Three.js Canvas - Fixed background positioning */
@@ -129,7 +140,7 @@
     <canvas id="bg-canvas"></canvas>
 
     <!-- MAIN CONTENT -->
-    <div class="max-w-md mx-auto relative px-4 z-10">
+    <div class="max-w-md mx-auto relative px-4 z-10 pt-16">
         
         <!-- The Track -->
         <div class="track-line"></div>
@@ -171,16 +182,16 @@
                 <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent w-full h-full animate-scan pointer-events-none"></div>
             </div>
 
-            <!-- Scroll Down Arrow (New Feature) -->
-            <div id="scroll-prompt" class="mt-8 flex flex-col items-center opacity-0">
-                <span class="text-xs font-bold uppercase tracking-wider text-white/80 mb-1">Scroll Down</span>
-                <i class="fas fa-chevron-down text-2xl text-white animate-bounce"></i>
-            </div>
-
             <!-- Wheels -->
             <div class="train-wheel left-6 spin-wheel"></div>
             <div class="train-wheel right-6 spin-wheel"></div>
             <div class="coupler"></div>
+        </div>
+
+        <!-- Scroll Down Arrow - Fixed positioned on left center -->
+        <div id="scroll-prompt" class="fixed left-6 top-1/2 transform -translate-y-1/2 flex flex-col items-center opacity-0 z-50">
+            <span class="text-xs font-bold uppercase tracking-wider text-gray-700 mb-1 writing-mode-vertical-rl text-orientation-mixed transform rotate-90 origin-center">Scroll</span>
+            <i class="fas fa-chevron-down text-2xl text-gray-700 animate-bounce"></i>
         </div>
 
         <!-- ✉️ CARRIAGE: INVITATION LETTER -->
@@ -510,6 +521,27 @@
             duration: 1.5,
             delay: 1, // Wait for engine to load
             ease: "power2.out"
+        });
+
+        // Hide scroll prompt when user starts scrolling
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                gsap.to("#scroll-prompt", {
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: "power2.out"
+                });
+            } else if (window.scrollY === 0) {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    gsap.to("#scroll-prompt", {
+                        opacity: 1,
+                        duration: 0.5,
+                        ease: "power2.out"
+                    });
+                }, 1000);
+            }
         });
 
         // --- 2. TRAIN ENGINE WOBBLE & BOUNCE ---
